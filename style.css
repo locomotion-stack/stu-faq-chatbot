@@ -1,0 +1,53 @@
+/* STU Chatbot Styles */
+
+.main-header {
+    text-align: center;
+    color: #004B8D; /* STU Blue */
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.sub-header {
+    text-align: center;
+    color: #FFB400; /* STU Gold */
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.stChatInput {
+    border-radius: 20px;
+}
+
+/* Make buttons look nicer */
+.stButton > button {
+    background-color: #004B8D;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    width: 100%;
+}
+.stButton > button:hover {
+    background-color: #FFB400;
+    color: #004B8D;
+}
+
+/* Chat bubble spacing */
+.stChatMessage {
+    padding: 10px;
+    border-radius: 15px;
+}
+
+
+/* STU Button Colors - Green and Gold */
+.stButton>button {
+    background-color: #006B3C !important; /* STU Green */
+    color: white !important;
+    border-radius: 20px !important;
+    border: none !important;
+    font-weight: bold !important;
+}
+.stButton>button:hover {
+    background-color: #FFB81C !important; /* STU Gold on hover */
+    color: #0033A0 !important; /* STU Blue text */
+}
