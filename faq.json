@@ -1,26 +1,117 @@
 [
-    {
-        "question": "What are STU school fees",
-        "answer": "School fees vary by program. Check the STU website or visit the Accounts Office for current fees."
-    },
-    {
-        "question": "How do I register courses",
-        "answer": "Log in to the STU student portal at stu.edu.gh and go to Course Registration during the registration period."
-    },
-    {
-        "question": "Where is STU located",
-        "answer": "Sunyani Technical University is located in Sunyani, Bono Region, Ghana."
-    },
-    {
-        "question": "What programs does STU offer",
-        "answer": "STU offers HND, BTech, and Masters programs in Engineering, Applied Sciences, Business, and Built Environment."
-    },
-    {
-        "question": "When is admission open",
-        "answer": "Admissions usually open between March and August each year. Check stu.edu.gh/admissions for dates."
-    },
-    {
-        "question": "How do I check my results",
-        "answer": "Log in to the STU student portal and go to 'View Results' under the Academics tab."
-    }
+  {
+    "category": "Programmes",
+    "question": "What programmes does Sunyani Technical University offer at the Master's level?",
+    "answer": "STU offers these 2-Year MTech/MSc programmes: MTech Construction Technology and Management, MTech Telecommunications Engineering, MTech Water and Sanitation Engineering, MTech Road and Transportation Engineering, MTech Structural Engineering, MTech Automobile Engineering, MTech Plant Engineering, MTech Production Engineering, MTech Electrical Engineering (Power), MSc Procurement and Supply Chain Management, and MSc Marketing."
+  },
+  {
+    "category": "Admissions",
+    "question": "What are the entry requirements for Master's degree programmes at STU?",
+    "answer": "For Master's: (1) First degree not below 2nd Class Lower in relevant field. (2) 3rd Class or Pass degree + at least 2 years relevant industry experience + pass a selection interview."
+  },
+  {
+    "category": "Programmes",
+    "question": "What Bachelor's degree programmes are offered at STU?",
+    "answer": "4-Year BTech/BSc: Engineering - Electrical/Electronics, Mechanical, Civil, Welding/Metallurgical, Materials, Environmental/Safety, Water/Sanitation. Sciences - Computer Science, ICT, Applied Math, Pharmacy Technician, Diagnostic Medical Imaging, Agriculture, Mineral Engineering. Business - Accounting, Marketing, Procurement, Office Management, Management Studies Top-Up. Built Environment - Construction Tech, Real Estate, Facilities Management, Interior Design, Wood Construction."
+  },
+  {
+    "category": "Admissions",
+    "question": "What are the entry requirements for Bachelor's degree programmes at STU?",
+    "answer": "SSSCE: Credits A-D in English, Math, Integrated Science + 3 electives. WASSCE: Credits A1-C6 in same. Certificate II/NABPTEX holders also qualify. HND holders enter at Level 300. Mature: 25+ years, 2 years experience, pass exam. Other routes: A-Level, Technical School, Teacher Training."
+  },
+  {
+    "category": "Programmes",
+    "question": "What HND programmes are offered at STU?",
+    "answer": "Business: HND Accountancy, Computerized Accounting, Purchasing and Supply, Secretaryship and Management Studies. Engineering: HND Welding/Metallurgical, Electrical/Electronics, Materials, Mechanical. Built Environment: HND Building Tech, Ceramic Arts, Fashion Design, Textiles, Interior Design. Applied Sciences: HND Computer Science, Dispensing Tech, Agriculture, Hotel Catering, ICT. Many available in Regular, Weekend, and Evening."
+  },
+  {
+    "category": "Admissions",
+    "question": "What are the entry requirements for HND programmes at STU?",
+    "answer": "SSSCE: Credits A-D in English, Math, Integrated Science/Social Studies + 3 electives. WASSCE: Credits A1-D7 in same. Certificate II holders qualify. A-Level: 5 credits including English/Math. DBS holders: Distinction/Credit enter Level 200, Pass enter Level 100. Mature: 25+ years, 2 years experience, pass exam."
+  },
+  {
+    "category": "Programmes",
+    "question": "What Diploma programmes does STU offer?",
+    "answer": "2-Year Diplomas: Real Estate, Computerised Accounting DCA, Banking Tech and Accounting DBTA, Electronic Marketing, Business Administration, Public Relations, Procurement and Materials Management. 1-Year DBS: Accounting, Secretarial, Management, Marketing, Purchasing and Supply, Statistics, Entrepreneurship."
+  },
+  {
+    "category": "Admissions",
+    "question": "What are the entry requirements for Diploma programmes at STU?",
+    "answer": "2-Year Diplomas: 5 SSSCE/WASSCE passes including English and Math, or GBCE equivalent. 1-Year DBS: 4 SSSCE/WASSCE passes including English and Math, or GBCE equivalent."
+  },
+  {
+    "category": "Programmes",
+    "question": "What Craft and Certificate programmes does STU offer?",
+    "answer": "CTVET Programmes. National Proficiency I: Garment Making, Automotive Engineering, Block Laying and Tiling, Welding/Fabrication, Electrical Installation, Plumbing. National Certificate I: Garment Making, Electrical Engineering Tech, Block Laying, Automotive Mechanic, Furniture Design, Welding/Fabrication, Building Construction, Electronics, Poultry Production, Computer Data Admin, Networking, Software Development. Entry: SSSCE/WASSCE and JHS certificates."
+  },
+  {
+    "category": "Programmes",
+    "question": "What short courses and proficiency certificates does STU offer?",
+    "answer": "Short courses: Architectural and Engineering Draughtsmanship, Proficiency in Chinese/English/French, Customer Service, Health Safety and Security Management, Insurance Marketing, Hotel Management, Welding, Plumbing. Contact Admissions Office for dates and fees."
+  },
+  {
+    "category": "Programmes",
+    "question": "What professional programmes does STU offer?",
+    "answer": "1. Professional Diploma in Computerised Accounting - requires Diploma in Computerised Accounting. 2. CIMG Programmes: Professional Certificate to Professional Master's in Applied Marketing, plus Professional Marketer designation."
+  },
+  {
+    "category": "Admissions",
+    "question": "How do I apply for admission to STU?",
+    "answer": "1. Buy Admission Voucher from STU Finance Office, Post Offices, or banks: Fidelity, Zenith, GCB, Stanbic, UMB, CBG, Prudential, ADB. Or dial *885#. 2. Go to admissions.stu.edu.gh and log in with Serial + PIN. 3. Complete form. 4. Print and submit with certificates to Registrar's Office, P.O. Box 206, Sunyani. Mature applicants add birth/JHS certificate."
+  },
+  {
+    "category": "Fees",
+    "question": "How much does the STU application form cost?",
+    "answer": "Postgraduate: GH¢250. Undergraduate BTech/BSc/HND/Diploma: GH¢150. Mature: GH¢250. Certificate: GH¢100."
+  },
+  {
+    "category": "Admissions",
+    "question": "Where can I buy an STU admission voucher?",
+    "answer": "STU Finance Office, Regional and District Post Offices, or any branch of Fidelity, Zenith, GCB, Stanbic, UMB, CBG, Prudential, ADB Bank. Also via mobile: dial *885#."
+  },
+  {
+    "category": "Admissions",
+    "question": "How do I apply online for STU admission?",
+    "answer": "After buying your voucher, go to admissions.stu.edu.gh. Log in with Serial Number and PIN. Complete the application online, then print and submit with certificates to the Registrar's Office."
+  },
+  {
+    "category": "Admissions",
+    "question": "Where do I submit my completed STU application form?",
+    "answer": "Submit printed form + photocopies of certificates to: The Registrar's Office, Sunyani Technical University, P.O. Box 206, Sunyani. Post or in person. Mature applicants must include birth certificate or JHS certificate."
+  },
+  {
+    "category": "Contact",
+    "question": "Who do I contact for admissions enquiries at STU?",
+    "answer": "Deputy Registrar, Academic Affairs & Admissions: 0352023278, 0352027052, 0501512556, 0552685658"
+  },
+  {
+    "category": "Admissions",
+    "question": "What are the requirements for mature applicants at STU?",
+    "answer": "Must be at least 25 years old, have at least 2 years relevant industrial experience, pass a written entrance exam, and provide proof of date of birth. Pay GH¢150.00 on or before exam day at STU campus."
+  },
+  {
+    "category": "Admissions",
+    "question": "When is the mature applicants entrance exam at STU?",
+    "answer": "Friday, 31st October 2025 at 10:00 a.m. prompt at Sunyani Technical University campus. Pay GH¢150.00 on or before exam day."
+  },
+  {
+    "category": "Admissions",
+    "question": "Does STU admit HND holders into Bachelor's degree programmes?",
+    "answer": "Yes. HND holders in relevant programme areas are admitted into BTech/BSc programmes at Level 300."
+  },
+  {
+    "category": "Admissions",
+    "question": "What is the STU admissions website?",
+    "answer": "The official admissions portal is admissions.stu.edu.gh. You need a Serial Number and PIN from a purchased voucher to log in."
+  },
+  {
+    "category": "Programmes",
+    "question": "Does STU offer evening or weekend programmes?",
+    "answer": "Yes. Several HND programmes run in Regular, Weekend, and Evening modes. Especially in Business and Management Studies and HND Hotel Catering and Institutional Management. Designed for working students."
+  },
+  {
+    "category": "General",
+    "question": "What is Sunyani Technical University?",
+    "answer": "Sunyani Technical University (STU) is a technical university in Sunyani, Bono Region, Ghana. It offers Craft/Certificate, Diploma, HND, Bachelor's BTech/BSc, and Master's MTech/MSc programmes in Engineering, Business, Applied Sciences, Built Environment, and Applied Arts. Focused on TVET and producing industry-ready graduates."
+  }
 ]
