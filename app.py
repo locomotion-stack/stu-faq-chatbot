@@ -1,57 +1,85 @@
 import streamlit as st
 import json
 
-# Page config
-st.set_page_config(page_title="STU FAQ Chatbot", page_icon="🎓", layout="centered")
+st.set_page_config(page_title="STU Chatbot", page_icon="🎓", layout="wide")
 
-# Load CSS
-with open("style.css") as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+def load_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-# Load FAQ data
-with open("faq.json", "r", encoding="utf-8") as f:
-    faqs = json.load(f)
+load_css("style.css")
 
-# Init chat history
+# ===== 1. LOAD FAQs =====
+@st.cache_data
+def load_faqs():
+    with open('faq.json', 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+faqs = load_faqs()
+
+# ===== 2. SMART SEARCH FUNCTION =====
+def find_answer(user_q):
+    user_q = user_q.lower()
+
+    for faq in faqs:
+        q = faq["question"].lower()
+        a = faq["answer"].lower()
+
+        # Check if any key words from user match the FAQ question
+        user_words = [word for word in user_q.split() if len(word) > 3]
+        if any(word in q for word in user_words):
+            return faq["answer"]
+
+        # Keyword shortcuts
+        if any(word in user_q for word in ["location", "where", "address"]):
+            if "sunyani" in a or "bono" in a:
+                return faq["answer"]
+        if any(word in user_q for word in ["fee", "fees", "cost", "price", "ghc"]):
+            if "gh¢" in a:
+                return faq["answer"]
+        if any(word in user_q for word in ["admission", "apply", "voucher", "form"]):
+            if "admissions.stu.edu.gh" in a or "voucher" in a:
+                return faq["answer"]
+        if any(word in user_q for word in ["programme", "program", "course", "degree"]):
+            if "btech" in a or "mtech" in a or "hnd" in a:
+                return faq["answer"]
+
+    return "Sorry, I couldn't find an answer for that. 😅\n\nTry asking about: **Programmes, Admissions, Fees**\n\nOr contact STU Admissions: 0352023278, 0501512556"
+
+# ===== 3. CHAT UI =====
+st.title("🎓 Sunyani Technical University Chatbot")
+st.caption("Ask me anything about STU admissions, programmes, and fees")
+
+# Initialize chat history
 if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# Logo and Title - Centered
-col1, col2, col3 = st.columns([1,2,1])
-with col2:
-    st.image("logo.png", width=80)
-st.markdown("<h1 style='text-align: center; color: #0033A0;'>🎓 STU FAQ Chatbot</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #FFB81C;'>Your AI Assistant for Sunyani Technical University</p>", unsafe_allow_html=True)
-
-# Quick Question Buttons
-st.write("**Quick Questions:**")
-cols = st.columns(3)
-questions = ["School Fees", "Course Registration", "Location"]
-for i, q in enumerate(questions):
-    if cols[i].button(q, use_container_width=True):
-        st.session_state.messages.append({"role": "user", "content": q})
-        # Find answer
-        answer = "Sorry, I don't have an answer for that yet."
-        for faq in faqs:
-            if q.lower() in faq["question"].lower():
-                answer = faq["answer"]
-        st.session_state.messages.append({"role": "assistant", "content": answer})
-        st.rerun()
-
-st.divider()
+    st.session_state.messages = [{"role": "assistant", "content": "Hello! I'm the STU Assistant. How can I help you today?"}]
 
 # Display chat history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
-        st.write(message["content"])
+        st.markdown(message["content"])
 
-# Chat input - ALWAYS AT THE BOTTOM
-if prompt := st.chat_input("Ask a question about STU..."):
+# Quick Question Buttons
+st.write("**Quick Questions:**")
+cols = st.columns(4)
+quick_questions = ["Master's Programmes", "Application Cost", "How to Apply", "STU Location"]
+
+for i, q in enumerate(quick_questions):
+    if cols[i].button(q, use_container_width=True):
+        st.session_state.messages.append({"role": "user", "content": q})
+        answer = find_answer(q)
+        st.session_state.messages.append({"role": "assistant", "content": answer})
+        st.rerun()
+
+# User input
+if prompt := st.chat_input("Ask me anything about STU..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    # Find answer
-    answer = "Sorry, I couldn't find an answer. Try rephrasing or contact STU admin."
-    for faq in faqs:
-        if prompt.lower() in faq["question"].lower():
-            answer = faq["answer"]
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            answer = find_answer(prompt)
+            st.markdown(answer)
+
     st.session_state.messages.append({"role": "assistant", "content": answer})
-    st.rerun()
