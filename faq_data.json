@@ -1,0 +1,28 @@
+{
+  "faqs": [
+    {
+      "question": "What short courses does STU offer?",
+      "answer": "STU offers: Architectural and Engineering Draughtsmanship, Proficiency in Customer Service, Health Safety and Security Management, Insurance Marketing, Hotel Management. Contact Admissions Office for dates and fees."
+    },
+    {
+      "question": "What are the application fees?",
+      "answer": "Postgraduate: GH¢250. Undergraduate BTech/BSc/HND/Diploma: GH¢150. Mature: GH¢250. Certificate: GH¢100. Payment is via bank or MoMo."
+    },
+    {
+      "question": "Where is STU located?",
+      "answer": "STU is located in Sunyani, Bono Region, Ghana. Main campus is along the Sunyani-Berekum road."
+    },
+    {
+      "question": "How do I apply?",
+      "answer": "Buy e-voucher, go to admissions.stu.edu.gh, fill form, upload documents, submit. Deadline is usually July."
+    },
+    {
+      "question": "What master's programmes are available?",
+      "answer": "MSc in Construction Technology, MA in Procurement, MSc in Environmental Science. Duration is 2 years."
+    },
+    {
+      "question": "Can international students apply?",
+      "answer": "Yes. They must submit WASSCE/A'Level results and passport. Fees are paid in USD equivalent."
+    }
+  ]
+}
