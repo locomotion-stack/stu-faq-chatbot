@@ -1,7 +1,15 @@
 import streamlit as st
+from google import genai
+from dotenv import load_dotenv
+import os
 import json
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
-st.set_page_config(page_title="STU Chatbot", page_icon="🎓", layout="wide")
+# 1. PAGE SETUP
+st.set_page_config(page_title="STU AI Assistant", page_icon="🎓")
+st.title("🎓 Sunyani Technical University AI Assistant")
+st.caption("Ask me anything about admissions, fees, and programmes")
 
 def load_css(file_name):
     with open(file_name) as f:
@@ -9,77 +17,77 @@ def load_css(file_name):
 
 load_css("style.css")
 
-# ===== 1. LOAD FAQs =====
-@st.cache_data
-def load_faqs():
-    with open('faq.json', 'r', encoding='utf-8') as f:
-        return json.load(f)
+# 2. LOAD API KEY AND GEMINI CLIENT
+load_dotenv()
+client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY")) # <-- just create client here
 
-faqs = load_faqs()
+# 3. LOAD FAQ FROM JSON FILE
+with open('faq_data.json', 'r', encoding='utf-8') as f:
+    faq_data = json.load(f)
 
-# ===== 2. SMART SEARCH FUNCTION =====
-def find_answer(user_q):
-    user_q = user_q.lower()
+documents = [item["answer"] for item in faq_data["faqs"]]
 
-    for faq in faqs:
-        q = faq["question"].lower()
-        a = faq["answer"].lower()
+# 4. SETUP TF-IDF SEARCH - NO TORCH!
+@st.cache_resource
+def load_vectorizer():
+    vectorizer = TfidfVectorizer()
+    doc_vectors = vectorizer.fit_transform(documents)
+    return vectorizer, doc_vectors
 
-        # Check if any key words from user match the FAQ question
-        user_words = [word for word in user_q.split() if len(word) > 3]
-        if any(word in q for word in user_words):
-            return faq["answer"]
+vectorizer, doc_vectors = load_vectorizer()
 
-        # Keyword shortcuts
-        if any(word in user_q for word in ["location", "where", "address"]):
-            if "sunyani" in a or "bono" in a:
-                return faq["answer"]
-        if any(word in user_q for word in ["fee", "fees", "cost", "price", "ghc"]):
-            if "gh¢" in a:
-                return faq["answer"]
-        if any(word in user_q for word in ["admission", "apply", "voucher", "form"]):
-            if "admissions.stu.edu.gh" in a or "voucher" in a:
-                return faq["answer"]
-        if any(word in user_q for word in ["programme", "program", "course", "degree"]):
-            if "btech" in a or "mtech" in a or "hnd" in a:
-                return faq["answer"]
+# 5. AI BRAIN: RETRIEVE + GENERATE WITH GEMINI
+def get_ai_answer(user_q):
+    # RETRIEVE: Find top 3 most relevant FAQ chunks using TF-IDF
+    q_vector = vectorizer.transform([user_q])
+    similarities = cosine_similarity(q_vector, doc_vectors)
+    top_indices = similarities.argsort()[0][-3:][::-1]
+    context = "\n\n".join([documents[i] for i in top_indices])
 
-    return "Sorry, I couldn't find an answer for that. 😅\n\nTry asking about: **Programmes, Admissions, Fees**\n\nOr contact STU Admissions: 0352023278, 0501512556"
+    # GENERATE: Ask Gemini to answer
+    prompt = f"""You are the friendly STU AI Assistant. Use ONLY the context below.
+Be warm, conversational, and summarize. Don't just list.
+If the answer is not in the context, say "I don't have that info, but contact admissions: 0352023278"
 
-# ===== 3. CHAT UI =====
-st.title("🎓 Sunyani Technical University Chatbot")
-st.caption("Ask me anything about STU admissions, programmes, and fees")
+CONTEXT:
+{context}
 
-# Initialize chat history
+STUDENT QUESTION: {user_q}
+
+ANSWER:"""
+
+    # FIXED THIS LINE - use client.models.generate_content
+    response = client.models.generate_content(
+        model='gemini-2.5-pro',
+        contents=prompt
+    )
+    return response.text + "\n\n*Source: STU FAQ*"
+
+# 6. STREAMLIT CHAT UI
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "assistant", "content": "Hello! I'm the STU Assistant. How can I help you today?"}]
+    st.session_state.messages = []
 
-# Display chat history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Quick Question Buttons
 st.write("**Quick Questions:**")
 cols = st.columns(4)
-quick_questions = ["Master's Programmes", "Application Cost", "How to Apply", "STU Location"]
-
-for i, q in enumerate(quick_questions):
-    if cols[i].button(q, use_container_width=True):
+questions = ["Master's Programmes", "Application Cost", "How to Apply", "STU Location"]
+for i, q in enumerate(questions):
+    if cols[i].button(q):
         st.session_state.messages.append({"role": "user", "content": q})
-        answer = find_answer(q)
+        with st.chat_message("user"): st.markdown(q)
+        with st.chat_message("assistant"):
+            answer = get_ai_answer(q)
+            st.markdown(answer)
         st.session_state.messages.append({"role": "assistant", "content": answer})
         st.rerun()
 
-# User input
 if prompt := st.chat_input("Ask me anything about STU..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
+    with st.chat_message("user"): st.markdown(prompt)
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            answer = find_answer(prompt)
-            st.markdown(answer)
-
+        answer = get_ai_answer(prompt)
+        st.markdown(answer)
     st.session_state.messages.append({"role": "assistant", "content": answer})
