@@ -90,87 +90,209 @@ vectorizer, doc_vectors = load_vectorizer()
 # ============================================================
 # 5. AI BRAIN: RETRIEVE + GENERATE WITH GEMINI
 # ============================================================
-def get_ai_answer(user_q):
+```python
+# ============================================================
+# ASK GEMINI WITH CONVERSATION MEMORY
+# ============================================================
+
+def get_ai_answer(user_question):
 
     # --------------------------------------------------------
-    # RETRIEVE
-    # Find the top 3 most relevant FAQ answers
+    # 1. GET RECENT CONVERSATION HISTORY
+    # --------------------------------------------------------
+    #
+    # Keep only the last 6 messages.
+    # This prevents the prompt from becoming unnecessarily large.
+    #
+
+    recent_messages = st.session_state.get(
+        "messages",
+        []
+    )[-6:]
+
+
+    # --------------------------------------------------------
+    # 2. CREATE CONVERSATION TEXT
     # --------------------------------------------------------
 
-    q_vector = vectorizer.transform([user_q])
+    conversation_history = ""
 
-    similarities = cosine_similarity(
-        q_vector,
-        doc_vectors
+    for message in recent_messages:
+
+        role = message["role"]
+
+        if role == "user":
+            conversation_history += (
+                f"Student: {message['content']}\n"
+            )
+
+        elif role == "assistant":
+            conversation_history += (
+                f"Assistant: {message['content']}\n"
+            )
+
+
+    # --------------------------------------------------------
+    # 3. CREATE A BETTER SEARCH QUERY
+    # --------------------------------------------------------
+    #
+    # This is important for follow-up questions.
+    #
+    # Example:
+    #
+    # Previous:
+    # "What master's programmes does STU offer?"
+    #
+    # Current:
+    # "How much is it?"
+    #
+    # TF-IDF can struggle with "How much is it?"
+    # because those words don't tell it what "it" means.
+    #
+    # We therefore include the recent conversation when
+    # searching the FAQ database.
+    #
+
+    search_query = conversation_history + (
+        f"\nStudent's latest question: {user_question}"
     )
 
-    top_indices = similarities.argsort()[0][-3:][::-1]
-
-    context = "\n\n".join(
-        [documents[i] for i in top_indices]
-    )
 
     # --------------------------------------------------------
-    # GENERATE
+    # 4. RETRIEVE RELEVANT STU FAQ INFORMATION
+    # --------------------------------------------------------
+
+    context = retrieve_context(
+        search_query,
+        top_k=3
+    )
+
+
+    # --------------------------------------------------------
+    # 5. CREATE GEMINI PROMPT
     # --------------------------------------------------------
 
     prompt = f"""
-You are the friendly STU AI Assistant for
-Sunyani Technical University.
+You are the friendly AI Assistant for
+Sunyani Technical University (STU) in Ghana.
 
-Use ONLY the information provided in the CONTEXT below.
+You help students with questions about:
 
-Be warm, conversational, helpful, and concise.
-Summarize the information naturally instead of simply
-listing it.
+- Admissions
+- Application procedures
+- Programmes
+- Fees
+- Entry requirements
+- Contact information
+- STU services
+- General university information
 
-If the answer cannot be found in the context, say:
+IMPORTANT RULES:
 
-"I don't have that information, but you can contact
-STU Admissions on 0352023278."
+1. Use ONLY information contained in the STU FAQ CONTEXT.
+2. You may use the CONVERSATION HISTORY to understand what
+   the student means by follow-up questions.
+3. Do NOT invent information.
+4. Do NOT make up fees, programmes, dates, requirements,
+   telephone numbers, email addresses, or locations.
+5. If the answer is not contained in the FAQ context,
+   clearly tell the student that you do not have that
+   information.
+6. If information is unavailable, tell the student to
+   contact STU Admissions on 0352023278.
+7. Be warm, friendly, and conversational.
+8. Keep answers reasonably short and easy to understand.
+9. Do not mention TF-IDF, retrieval, prompts, or the
+   technical system.
+10. Answer the student's LATEST question.
+11. Use previous messages only when they help explain
+    what the latest question refers to.
 
-Do not invent information.
+CONVERSATION HISTORY:
 
-CONTEXT:
+{conversation_history}
+
+STU FAQ CONTEXT:
+
 {context}
 
-STUDENT QUESTION:
-{user_q}
+LATEST STUDENT QUESTION:
+
+{user_question}
 
 ANSWER:
 """
 
+
+    # --------------------------------------------------------
+    # 6. SEND REQUEST TO GEMINI
+    # --------------------------------------------------------
+
     try:
+
         response = client.models.generate_content(
-            model="gemini-3.6-flash",
+            model=MODEL_NAME,
             contents=prompt
         )
 
-        if response.text:
-            return response.text + "\n\n*Source: STU FAQ*"
 
-        return "Sorry, I couldn't generate an answer."
+        # ----------------------------------------------------
+        # 7. CHECK RESPONSE
+        # ----------------------------------------------------
+
+        if response and response.text:
+
+            return (
+                response.text.strip()
+                + "\n\n*Source: STU FAQ*"
+            )
+
+        return (
+            "Sorry, I couldn't generate an answer right now."
+        )
+
+
+    # --------------------------------------------------------
+    # 8. HANDLE GEMINI ERRORS
+    # --------------------------------------------------------
 
     except errors.ClientError as e:
 
         if e.code == 429:
+
             return (
-                "⚠️ Gemini API quota exceeded. "
-                "Please check your Google AI Studio/API "
-                "quota and billing settings."
+                "⚠️ **Gemini API quota exceeded.**\n\n"
+                "Please check your Google API quota "
+                "and billing settings."
             )
 
         elif e.code == 404:
+
             return (
-                "⚠️ The Gemini model is not available "
-                "for this API project. Please check the "
-                "available models for your API key."
+                "⚠️ **Gemini model unavailable.**\n\n"
+                f"The model `{MODEL_NAME}` is not available "
+                "to this API project."
+            )
+
+        elif e.code in (401, 403):
+
+            return (
+                "⚠️ **Gemini API authentication error.**\n\n"
+                "Please check your API key and permissions."
             )
 
         return f"⚠️ Gemini API error: {e}"
 
+
+    # --------------------------------------------------------
+    # 9. HANDLE OTHER ERRORS
+    # --------------------------------------------------------
+
     except Exception as e:
+
         return f"⚠️ Something went wrong: {e}"
+```
+
 
 
 
